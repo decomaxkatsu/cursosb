@@ -8,6 +8,7 @@ import com.anderson.cursosb.cursosb.domain.Cidade;
 import com.anderson.cursosb.cursosb.domain.Cliente;
 import com.anderson.cursosb.cursosb.domain.Endereco;
 import com.anderson.cursosb.cursosb.domain.Estado;
+import com.anderson.cursosb.cursosb.domain.ItemPedido;
 import com.anderson.cursosb.cursosb.domain.Pagamento;
 import com.anderson.cursosb.cursosb.domain.PagamentoComBoleto;
 import com.anderson.cursosb.cursosb.domain.PagamentoComCartao;
@@ -20,6 +21,7 @@ import com.anderson.cursosb.cursosb.repository.CidadeRepository;
 import com.anderson.cursosb.cursosb.repository.ClienteRepository;
 import com.anderson.cursosb.cursosb.repository.EnderecoRepository;
 import com.anderson.cursosb.cursosb.repository.EstadoRepository;
+import com.anderson.cursosb.cursosb.repository.ItemPedidoRepository;
 import com.anderson.cursosb.cursosb.repository.PagamentoRepository;
 import com.anderson.cursosb.cursosb.repository.PedidoRepository;
 import com.anderson.cursosb.cursosb.repository.ProdutoRepository;
@@ -55,6 +57,9 @@ public class DemoApplication implements CommandLineRunner{
 
 	@Autowired
 	private PedidoRepository pedidoRepository;
+
+	@Autowired
+	private ItemPedidoRepository itemPedidoRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
@@ -119,6 +124,19 @@ public class DemoApplication implements CommandLineRunner{
 
 		pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
 		pagamentoRepository.saveAll(Arrays.asList(pagto1, pagto2));
+
+		ItemPedido ip1 = new ItemPedido(ped1, p1, 1, 2000d, 0d);
+		ItemPedido ip2 = new ItemPedido(ped1, p3, 2, 80d, 0d);
+		ItemPedido ip3 = new ItemPedido(ped2, p2, 1, 800d, 100d);
+
+		ped1.getItens().addAll(Arrays.asList(ip1, ip2));
+		ped2.getItens().addAll(Arrays.asList(ip3));
+
+		p1.getItens().addAll(Arrays.asList(ip1));
+		p2.getItens().addAll(Arrays.asList(ip3));
+		p3.getItens().addAll(Arrays.asList(ip2));
+
+		itemPedidoRepository.saveAll(Arrays.asList(ip1, ip2, ip3));
 	}
 
 }
