@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import com.anderson.cursosb.cursosb.domain.Categoria;
 import com.anderson.cursosb.cursosb.dto.CategoriaDTO;
 import com.anderson.cursosb.cursosb.repository.CategoriaRepository;
@@ -12,6 +14,9 @@ import com.anderson.cursosb.cursosb.services.exceptions.IntegrityViolationExcept
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 /**
@@ -29,10 +34,10 @@ public class CategoriaService {
             "Objeto não encontrado! Id: " + id + ", Tipo: " + Categoria.class.getName()));
     }
 
-    public List<CategoriaDTO> findAll(){
-        List<CategoriaDTO> categorias = categoriaRepository.findAll()
-            .stream().map(obj -> new CategoriaDTO(obj)).collect(Collectors.toList());
-        return categorias;
+    public Page<CategoriaDTO> findAll(Integer page, Integer size, String direction, String orderBy){
+        PageRequest pageRequest = PageRequest.of(page, size, Direction.valueOf(direction), orderBy);
+        Page<CategoriaDTO> categoriasDTO = categoriaRepository.findAll(pageRequest).map(obj -> new CategoriaDTO(obj));
+        return categoriasDTO;
     }
 
     public Categoria insert(Categoria categoria){
@@ -54,4 +59,8 @@ public class CategoriaService {
             throw new IntegrityViolationException("Não é possível apagar uma categoria que contenha produtos", e);
         }
     }
+
+	public Categoria fromDTO(CategoriaDTO categoriaDTO) {
+        return new Categoria(categoriaDTO.getId(), categoriaDTO.getNome());
+	}
 }
