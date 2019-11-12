@@ -1,4 +1,4 @@
-package com.anderson.cursosb.cursosb.services.Exceptions;
+package com.anderson.cursosb.cursosb.services.exceptions;
 
 /**
  * ObjectNotFoundException
